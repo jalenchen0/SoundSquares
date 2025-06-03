@@ -5,10 +5,11 @@ class SoundManager {
   SoundFile errorSound;
   SoundFile musicTrack;
 
-  SoundManager(PApplet sketch) {
+  SoundManager(PApplet sketch, int n, float speed) {
     clickSound = new SoundFile(sketch, "click.wav");
     errorSound = new SoundFile(sketch, "error.wav");
-    musicTrack = new SoundFile(sketch, "song.wav");
+    musicTrack = new SoundFile(sketch, "song" + n + ".wav");
+    musicTrack.rate(speed);
     musicTrack.play();
   }
 
@@ -19,8 +20,12 @@ class SoundManager {
   void playError() {
     errorSound.play();
   }
+  
+  void pause() {
+    musicTrack.pause();
+  }
 
-  double getTime() {
+  float getTime() {
     return musicTrack.position();
   }
 }

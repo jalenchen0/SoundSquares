@@ -16,10 +16,10 @@ class StatsManager {
 
   void display() {
     fill(255);
-    text("Hits: " + hits, 10, 20);
-    text("Misses: " + misses, 10, 40);
-    text("Combo: " + combo, 10, 60);
+    text("Hits: " + hits, 200, 60);
+    text("Misses: " + misses, 200, 80);
+    text("Combo: " + combo, 200, 100);
     float accuracy = totalNotes > 0 ? (hits * 100.0 / totalNotes) : 0;
-    text("Accuracy: " + nf(accuracy, 0, 2) + "%", 10, 80);
+    text("Accuracy: " + nf(accuracy, 0, 2) + "%", 200, 120);
   }
 }
