@@ -7,27 +7,15 @@ boolean playView = false;
 Group settingsBar;
 boolean settingsView = false;
 
-Textlabel error;
-
 PFont font;
 
-PImage example;
-
 float speed = 1;
-
-PVector center = new PVector(450, 350);
-
 int selected = 0;
-PImage customCursor;
+PImage cursor;
 String[] cursorList = {"White", "Blue"};
 
 StatsManager stats;
 SoundManager sounds;
-
-ArrayList<Note> notes = new ArrayList<Note>();
-Table noteTable;
-float songStartTime;
-boolean gameActive = false;
 
 void setup() {
   size(800, 600);
@@ -122,72 +110,25 @@ void setup() {
   
   cp5.addTextlabel("label1")
     .setText("Sound")
-    .setPosition(385, 50)
+    .setPosition((width) / 2, 50)
     .setColorValue(0xFF03FEB7)
-    .setFont(createFont("Arial", 40))
+    .setFont(createFont("Arial", 30))
   ;
   cp5.addTextlabel("label2")
     .setText("Squares")
-    .setPosition(370, 100)
+    .setPosition((width) / 2, 100)
     .setColorValue(0xFFFF63FF)
-    .setFont(createFont("Arial", 40))
-  ;
-  error = cp5.addTextlabel("Error")
-    .setPosition(300, 550)
-    .setColorValue(0xFFFF0000)
     .setFont(createFont("Arial", 30))
   ;
-  
-  example = loadImage("example.jpg");
-  
 }
 
 
 void draw() {
   background(0);
-  
-  
-  //image(example, 300, 200);
-  
-  float currentTime = sounds != null ? sounds.getTime() : 0;
-  
-  if (gameActive) {
-    for (int i = notes.size() - 1; i >= 0; i--) {
-      Note n = notes.get(i);
-      n.update(currentTime);
-  
-      if (n.checkHit(currentTime, mouseX, mouseY)) {
-        stats.addHit();
-        sounds.playClick();
-        notes.remove(i);
-        continue;
-      }
-  
-      if (n.missed) {
-        stats.addMiss();
-        sounds.playError();
-        notes.remove(i);
-        continue;
-      }
-  
-      n.display();
-    }
-  }
-  
   stats.display();
   
-  rectMode(CENTER);
-  //rect(350, 250, 100, 100);
-  //rect(350, 350, 100, 100);
-  //rect(350, 450, 100, 100);
-  //rect(450, 250, 100, 100);
-  noFill();
-  stroke(255);
-  rect(450, 350, 300, 300);
-  //rect(450, 450, 100, 100);
-  //rect(550, 250, 100, 100);
-  //rect(550, 350, 100, 100);
-  //rect(550, 450, 100, 100);
+  PImage example = loadImage("example.jpg");
+  image(example, 300, 200);
 }
 
 
@@ -222,17 +163,16 @@ void sideViewHelper() {
 
 
 void Cursor(int n) {
-  customCursor = loadImage(cursorList[n] + ".png");
-  cursor(customCursor);
+  cursor = loadImage(cursorList[n] + ".png");
+  cursor(cursor);
 }
 
 
 void playSong() {
-  if (selected == 0) {
-    error.setText("Select a song first");
+  if (sounds == null) {
+    // display error saying "Select a song first"
   } else {
-    error.setText("");
-    if (sounds != null) sounds.pause();
+    sounds.pause();
     sounds = new SoundManager(this, selected, speed);
   }
 }
@@ -247,28 +187,5 @@ void song2() {
 
 void Confirm() {
   playSong();
-  error.setText("");
-  
-  stats.setSpeed(speed);
-
-  String[] lines = loadStrings("song" + selected + ".csv");
-  loadNoteData(lines);
-
-  gameActive = true;
-}
-
-void loadNoteData(String[] lines) {
-  notes.clear();
-  stats.totalNotes = 0;
-  for (String line : lines) {
-    if (line.trim().length() == 0 || line.startsWith("time")) continue;
-    String[] parts = split(line, ',');
-    if (parts.length >= 3) {
-      float time = float(trim(parts[0]));
-      String pos = trim(parts[1]);
-      String col = trim(parts[2]);
-      notes.add(new Note(col, pos, time));
-      stats.totalNotes++;
-    }
-  }
+  // display notes
 }
